@@ -19,11 +19,7 @@ const postAPI = async (
       // Dinamik sayfalarda burası kullanılıyorsa o sayfalara -> export const dynamic = 'force-dynamic' ekle!
     })
       .then((res) => {
-        // if (res.url.includes('/notification') && res.redirected) {
-        //   return (window.location.href = res.url)
-        // } else {
-        //   return res.json()
-        // }
+        return res.json()
       })
       .catch((err) => console.log(err))
 

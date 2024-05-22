@@ -3,21 +3,30 @@
 import { postAPI } from '../../../services/fetchAPI'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/navigation'
-import * as Yup from 'yup'
+import { useEffect, useState } from 'react'
 
-// Yup doğrulama şeması
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi girin')
-    .required('E-posta gerekli'),
-  password: Yup.string()
-    .min(8, 'Şifre en az 8 karakter olmalı')
-    .required('Şifre gerekli'),
-})
+import { loginValidationSchema } from './loginValidationSchema'
 
 const LoginPage = () => {
   const router = useRouter()
-
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    const currentUser = localStorage.getItem('currentUser')
+    if (currentUser) {
+      const user = JSON.parse(currentUser)
+      if (user.role === 'ADMIN') {
+        router.push('/admindashboard')
+      } else if (user.role === 'USER') {
+        router.push('/userdashboard')
+      }
+    } else {
+      setLoading(false)
+    }
+  }, [router])
+  if (loading) {
+    return <p>loading...</p>
+  }
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -35,22 +44,31 @@ const LoginPage = () => {
         <Formik
           validateOnMount={true}
           initialValues={{ email: '', password: '' }}
-          validationSchema={validationSchema}
+          validationSchema={loginValidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const res = await postAPI('/auth/login', values)
-              // localStorage'da currentUser var mı kontrol et
-              let currentUser = localStorage.getItem('currentUser')
-              if (!currentUser) {
-                // currentUser yoksa kullanıcı bilgilerini ekleyerek kaydet
-                localStorage.setItem(
-                  'currentUser',
-                  JSON.stringify({
-                    id: '1',
-                    email: 'test123',
-                    role: 'Admin',
-                  })
-                )
+              if (res.status === 'success') {
+                const userData = {
+                  role: res.data.role,
+                  username: res.data.user.username,
+                  email: res.data.user.email,
+                }
+
+                // Kullanıcı verilerini localStorage'e kaydet
+                localStorage.setItem('currentUser', JSON.stringify(userData))
+                if (res.data.role === 'USER') {
+                  setTimeout(() => {
+                    router.push('/userdashboard')
+                  }, 3000)
+                } else if (res.data.role === 'ADMIN') {
+                  setTimeout(() => {
+                    router.push('/admindashboard')
+                  }, 3000)
+                }
+              } else {
+                // Giriş başarısız olduğunda kullanıcıya bildirim gösterilebilir
+                setError(res.message)
               }
             } catch (error) {
               console.error('API request failed:', error)
@@ -123,6 +141,10 @@ const LoginPage = () => {
                   )}
                 </div>
               </div>
+
+              {error && (
+                <p className="text-red-600 mt-4 text-center">{error}</p>
+              )}
 
               <div className="mt-6">
                 <button

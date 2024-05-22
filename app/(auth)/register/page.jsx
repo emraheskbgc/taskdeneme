@@ -3,24 +3,12 @@
 import { postAPI } from '../../../services/fetchAPI'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/navigation'
-import * as Yup from 'yup'
-
-// Yup doğrulama şeması
-const validationSchema = Yup.object({
-  username: Yup.string()
-    .min(5, 'Kullanıcı adı en az 5 karakter olmak zorunda')
-    .required('Kullanıcı adı gerekli'),
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi girin')
-    .required('E-posta gerekli'),
-  password: Yup.string()
-    .min(8, 'Şifre en az 8 karakter olmalı')
-    .required('Şifre gerekli'),
-})
+import { registerValidationSchema } from './registerValidationSchema'
+import { useState } from 'react'
 
 const RegisterPage = () => {
   const router = useRouter()
-
+  const [errorMessage, setErrorMessage] = useState('')
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -38,13 +26,17 @@ const RegisterPage = () => {
         <Formik
           validateOnMount={true}
           initialValues={{ username: '', email: '', password: '' }}
-          validationSchema={validationSchema}
+          validationSchema={registerValidationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const res = await postAPI('/auth/register', values)
-              setTimeout(() => {
-                router.push('/login')
-              }, 4000)
+              if (res.status === 'success') {
+                setTimeout(() => {
+                  router.push('/login')
+                }, 3000)
+              } else {
+                setErrorMessage(res.message)
+              }
             } catch (error) {
               console.error('API request failed:', error)
             }
@@ -132,7 +124,9 @@ const RegisterPage = () => {
                   )}
                 </div>
               </div>
-
+              {errorMessage && (
+                <p className="text-red-600 mt-4 text-center">{errorMessage}</p>
+              )}
               <div className="mt-6">
                 <button
                   type="submit"
