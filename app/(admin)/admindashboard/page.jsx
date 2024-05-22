@@ -1,28 +1,10 @@
 'use client'
-
-import { useEffect, useState } from 'react'
-import { checkRole } from '../../../lib/utils/authUtils'
-import { useRouter } from 'next/navigation'
 import Navbar from '../../../components/Navbar'
 import { adminNavLinks } from '../../../lib/constants/navLinks'
+import { useRoleRedirect } from '../../../lib/utils/useRoleRedirect'
 
 const AdminDashboard = () => {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const verifyRole = async () => {
-      const res = checkRole()
-      if (res.role !== 'ADMIN') {
-        router.push('/userdashboard')
-      } else if (res.role === '') {
-        router.push('/login')
-      } else {
-        setLoading(false)
-      }
-    }
-    verifyRole()
-  }, [router])
+  const loading = useRoleRedirect('ADMIN', '/userdashboard')
 
   if (loading) {
     return <div>Loading...</div>

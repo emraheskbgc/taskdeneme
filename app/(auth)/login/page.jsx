@@ -3,27 +3,16 @@
 import { postAPI } from '../../../services/fetchAPI'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { loginValidationSchema } from './loginValidationSchema'
+import { useRoleRedirect } from '../../../lib/utils/useRoleRedirect'
 
 const LoginPage = () => {
   const router = useRouter()
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    const currentUser = localStorage.getItem('currentUser')
-    if (currentUser) {
-      const user = JSON.parse(currentUser)
-      if (user.role === 'ADMIN') {
-        router.push('/admindashboard')
-      } else if (user.role === 'USER') {
-        router.push('/userdashboard')
-      }
-    } else {
-      setLoading(false)
-    }
-  }, [router])
+  const loading = useRoleRedirect([''], '/userdashboard')
+
   if (loading) {
     return <p>loading...</p>
   }

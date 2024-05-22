@@ -1,20 +1,30 @@
-import { useEffect } from 'react'
-
-import { checkRole } from './authUtils'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { checkRole } from './authUtils.js'
 
-export const useRoleRedirect = (desiredRole) => {
+export const useRoleRedirect = (expectedRole, redirectPath) => {
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser'))
+
+    if (!user) {
+      setLoading(false)
+      return
+    }
+
     const verifyRole = async () => {
-      const role = checkRole()
-      if (!role) {
-        router.push('/login')
-      } else if (role !== desiredRole) {
-        router.push(role === 'ADMIN' ? '/admindashboard' : '/userdashboard')
+      const res = await checkRole()
+      if (res.role !== expectedRole) {
+        router.push(redirectPath)
+      } else {
+        setLoading(false)
       }
     }
+
     verifyRole()
-  }, [router, desiredRole])
+  }, [router, expectedRole, redirectPath])
+
+  return loading
 }
