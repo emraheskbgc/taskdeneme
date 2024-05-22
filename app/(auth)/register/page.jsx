@@ -1,12 +1,15 @@
 'use client'
 
-import { postAPI } from '@/services/fetchAPI'
+import { postAPI } from '../../../services/fetchAPI'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/navigation'
 import * as Yup from 'yup'
 
 // Yup doğrulama şeması
 const validationSchema = Yup.object({
+  username: Yup.string()
+    .min(5, 'Kullanıcı adı en az 5 karakter olmak zorunda')
+    .required('Kullanıcı adı gerekli'),
   email: Yup.string()
     .email('Geçerli bir e-posta adresi girin')
     .required('E-posta gerekli'),
@@ -17,6 +20,7 @@ const validationSchema = Yup.object({
 
 const RegisterPage = () => {
   const router = useRouter()
+
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -26,26 +30,55 @@ const RegisterPage = () => {
           alt="Your Company"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Sign in to your account
+          Register
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <Formik
           validateOnMount={true}
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ username: '', email: '', password: '' }}
           validationSchema={validationSchema}
-          onSubmit={(values) => {
-            postAPI('/auth/register', values).then((res) => {
-              // const timeOut = setInterval(() => {
-              //   router.push('/auth/login')
-              //   clearInterval(timeOut)
-              // }, 4000)
-            })
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              const res = await postAPI('/auth/register', values)
+              setTimeout(() => {
+                router.push('/login')
+              }, 4000)
+            } catch (error) {
+              console.error('API request failed:', error)
+            }
+            setSubmitting(false)
           }}
         >
           {(props) => (
             <Form onSubmit={props.handleSubmit}>
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Username
+                </label>
+                <div className="mt-2">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    required
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.username}
+                  />
+                  {props.errors.username && props.touched.username && (
+                    <div className="text-red-600 text-sm mt-1">
+                      {props.errors.username}
+                    </div>
+                  )}
+                </div>
+              </div>
               <div>
                 <label
                   htmlFor="email"
@@ -74,23 +107,13 @@ const RegisterPage = () => {
               </div>
 
               <div>
-                <div className="flex items-center justify-between">
+                <div className="mt-2">
                   <label
                     htmlFor="password"
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
                     Password
                   </label>
-                  <div className="text-sm">
-                    <a
-                      href="#"
-                      className="font-semibold text-indigo-600 hover:text-indigo-500"
-                    >
-                      Forgot password?
-                    </a>
-                  </div>
-                </div>
-                <div className="mt-2">
                   <input
                     id="password"
                     name="password"
@@ -114,6 +137,7 @@ const RegisterPage = () => {
                 <button
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  disabled={props.isSubmitting}
                 >
                   Sign in
                 </button>
