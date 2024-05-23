@@ -52,7 +52,6 @@ model UserOnTask {
   userId String? @db.ObjectId
   task   Task?   @relation(fields: [taskId], references: [id])
   user   User?   @relation(fields: [userId], references: [id])
-  role   String
 }
 
 enum Priority {

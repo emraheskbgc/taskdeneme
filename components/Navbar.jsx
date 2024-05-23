@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-const Navbar = ({ title, navLinks }) => {
+const Navbar = ({ title, navLinks, route }) => {
   const router = useRouter()
   const handleLogout = () => {
     localStorage.removeItem('currentUser')
@@ -12,7 +10,9 @@ const Navbar = ({ title, navLinks }) => {
   return (
     <div className="  flex justify-between items-center border-b shadow-md p-7">
       <h1 className="text-xl font-semibold">
-        Task<span className="text-blue-700 font-bold">Manager</span> - {title}
+        <Link href={route}>
+          Task<span className="text-blue-700 font-bold">Manager</span> - {title}
+        </Link>
       </h1>
       <div className="flex items-start gap-3">
         <ul className="flex gap-4 items-center">
