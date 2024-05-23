@@ -37,7 +37,25 @@ export async function createNewData(tableName, newData) {
 // GET BY UNIQUE ONE VALUE
 export async function getDataByUnique(tableName, where) {
   try {
-    const data = await prisma[tableName].findUnique({ where: where })
+    const data = await prisma[tableName].findUnique({
+      where: where,
+    })
+    return data
+  } catch (error) {
+    return { error: error.message }
+  }
+}
+
+export async function getDataByUniqueRelitionalTable(
+  tableName,
+  where,
+  include
+) {
+  try {
+    const data = await prisma[tableName].findUnique({
+      where: where,
+      include: include,
+    })
     return data
   } catch (error) {
     return { error: error.message }
@@ -112,4 +130,6 @@ export default {
   deleteDataByMany,
 
   deleteDataAll,
+
+  getDataByUniqueRelitionalTable,
 }
