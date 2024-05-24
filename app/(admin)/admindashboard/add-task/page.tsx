@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import Loading from '../../../../components/loading/index.jsx'
 
 const AddTaskPage = () => {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([{ id: '', username: '' }])
   const [minDate, setMinDate] = useState('')
 
   const router = useRouter()
