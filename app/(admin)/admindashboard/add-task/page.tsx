@@ -9,6 +9,7 @@ import TextInput from '../../../../components/Inputs/TextInput.jsx'
 import SelectInput from '../../../../components/Inputs/SelectInput.jsx'
 import DateInput from '../../../../components/Inputs/DateInput.jsx'
 import { useRouter } from 'next/navigation'
+import Loading from '../../../../components/loading/index.jsx'
 
 const AddTaskPage = () => {
   const [users, setUsers] = useState([])
@@ -26,6 +27,9 @@ const AddTaskPage = () => {
     setMinDate(getDateNow())
   }, [])
 
+  if (users.length <= 0) {
+    return <Loading />
+  }
   return (
     <Formik
       initialValues={{
