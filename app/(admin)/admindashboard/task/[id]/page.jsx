@@ -1,13 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { getAPI } from '../../../../../services/fetchAPI/index.js'
+import { getAPI, postAPI } from '../../../../../services/fetchAPI/index.js'
 import Loading from '../../../../../components/loading/index.jsx'
 import { formatDate } from '../../../../../lib/utils/formatter.js'
 import Button from '../../../../../components/Buttons/Button'
+import { useRouter } from 'next/navigation'
 
 const TaskPage = ({ params }) => {
   const [taskDetail, setTaskDetail] = useState([])
+  const router = useRouter()
   useEffect(() => {
     const getTask = async () => {
       const res = await getAPI(`/tasks/${params.id}/get-task`)
@@ -29,6 +31,14 @@ const TaskPage = ({ params }) => {
         return 'font-bold bg-red-600 text-white p-2 px-4 text-sm rounded-full'
       default:
         return ''
+    }
+  }
+
+  const deleteTaskHandler = async (id) => {
+    const res = await postAPI(`/tasks/delete-task`, { id })
+    console.log(res)
+    if (res.status === 'success') {
+      router.push('/admindashboard/task')
     }
   }
 
@@ -55,6 +65,7 @@ const TaskPage = ({ params }) => {
               className={
                 'bg-red-500 text-white p-2 px-4 text-sm rounded-lg hover:bg-red-400 font-semibold'
               }
+              onClick={() => deleteTaskHandler(taskDetail.id)}
             />
           </div>
         </div>
