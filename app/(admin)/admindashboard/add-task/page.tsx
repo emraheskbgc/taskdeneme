@@ -62,7 +62,7 @@ const AddTaskPage = () => {
         const minSubtaskDate = formikProps.values.createdAt || minDate
         return (
           <Form className="flex flex-col gap-5 max-w-xl mx-auto">
-            <TextInput label="Title" name="title" type="text" required />
+            <TextInput label="Company Name" name="title" type="text" required />
             {formikProps.errors.title && formikProps.touched.title && (
               <div className="text-red-600 text-sm mt-1">
                 {formikProps.errors.title}

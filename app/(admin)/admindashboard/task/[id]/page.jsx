@@ -6,6 +6,7 @@ import Loading from '../../../../../components/loading/index.jsx'
 import { formatDate } from '../../../../../lib/utils/formatter.js'
 import Button from '../../../../../components/Buttons/Button'
 import { useRouter } from 'next/navigation'
+import checkPriority from '../../../../../lib/utils/checkPriority.js'
 
 const TaskPage = ({ params }) => {
   const [taskDetail, setTaskDetail] = useState([])
@@ -21,25 +22,15 @@ const TaskPage = ({ params }) => {
     return <Loading />
   }
 
-  const checkPriority = (priority) => {
-    switch (priority) {
-      case 'LOW':
-        return 'font-bold bg-green-500 text-white p-2 px-4 text-sm rounded-full'
-      case 'MEDIUM':
-        return 'font-bold bg-orange-600 text-white p-2 px-4 text-sm rounded-full'
-      case 'HIGH':
-        return 'font-bold bg-red-600 text-white p-2 px-4 text-sm rounded-full'
-      default:
-        return ''
-    }
-  }
-
   const deleteTaskHandler = async (id) => {
     const res = await postAPI(`/tasks/delete-task`, { id })
-    console.log(res)
     if (res.status === 'success') {
       router.push('/admindashboard/task')
     }
+  }
+
+  const updateTaskHandler = async (id) => {
+    router.push(`/admindashboard/task/${id}/update-task`)
   }
 
   return (
@@ -58,6 +49,7 @@ const TaskPage = ({ params }) => {
               className={
                 'bg-blue-500 text-white p-2 px-4 text-sm rounded-lg hover:bg-blue-400 font-semibold'
               }
+              onClick={() => updateTaskHandler(taskDetail.id)}
             />
 
             <Button
@@ -86,7 +78,9 @@ const TaskPage = ({ params }) => {
           {taskDetail.assignedUsers.map((teamMember) => (
             <div className="flex items-center gap-3" key={teamMember.user.id}>
               <div className="w-10 h-10 rounded-full bg-blue-500 flex justify-center items-center">
-                <span className="text-white font-bold">T</span>
+                <span className="text-white font-bold uppercase">
+                  {teamMember.user.username.slice(0, 1)}
+                </span>
               </div>
               <div>
                 <p>{teamMember.user.username}</p>

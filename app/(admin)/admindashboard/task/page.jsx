@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { getAPI } from '../../../../services/fetchAPI/index.js'
 import Link from 'next/link'
 import Loading from '../../../../components/loading'
+import checkPriority from '../../../../lib/utils/checkPriority.js'
 const TasksPage = () => {
   const [tasks, setTasks] = useState([])
   useEffect(() => {
@@ -20,7 +21,7 @@ const TasksPage = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-5 ">
       {tasks.map((task) => (
         <div
           key={task.id}
@@ -32,7 +33,9 @@ const TasksPage = () => {
                 {task.title}
               </h2>
             </Link>
-            <p className="font-semibold">{task.priority}</p>
+            <p className={checkPriority(task.priority)}>
+              <span>{task.priority}</span> PRIORITY
+            </p>
           </div>
           <div>
             <p className="text-sm">{task.description}</p>
