@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation'
 import TextInput from '../../../../../../components/Inputs/TextInput'
 import SelectInput from '../../../../../../components/Inputs/SelectInput'
 import DateInput from '../../../../../../components/Inputs/DateInput'
-import { getDateNow } from '../../../../../../lib/utils/dateUtils'
 import Loading from '../../../../../../components/loading'
 
 const UpdateTaskPage = ({ params }) => {
@@ -17,30 +16,25 @@ const UpdateTaskPage = ({ params }) => {
   const router = useRouter()
 
   useEffect(() => {
-    const fetchTask = async () => {
+    const fetchData = async () => {
       try {
-        const res = await getAPI(`/tasks/${params.id}/get-task`)
-        setTask(res.task)
+        const taskPromise = getAPI(`/tasks/${params.id}/get-task`)
+        const usersPromise = getAPI('/user/get-users')
+
+        const [taskRes, usersRes] = await Promise.all([
+          taskPromise,
+          usersPromise,
+        ])
+
+        setTask(taskRes.task)
+        setUsers(usersRes.data.users)
       } catch (error) {
-        console.error('Error fetching task:', error)
+        console.error('Error fetching data:', error)
       }
     }
 
-    fetchTask()
+    fetchData()
   }, [params.id])
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await getAPI('/user/get-users')
-        setUsers(res.data.users)
-      } catch (error) {
-        console.error('Error fetching users:', error)
-      }
-    }
-
-    fetchUsers()
-  }, [])
 
   const initialValues = {
     title: task ? task.title : '',
@@ -64,7 +58,6 @@ const UpdateTaskPage = ({ params }) => {
     const newData = { ...values, id: params.id }
     try {
       const res = await postAPI(`/tasks/update-task`, newData)
-      console.log(res)
       if (res.status === 'success') {
         router.push('/admindashboard/task')
       } else {

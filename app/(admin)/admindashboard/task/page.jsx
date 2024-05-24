@@ -11,7 +11,8 @@ const TasksPage = () => {
   useEffect(() => {
     const getTasks = async () => {
       const taskData = await getAPI('/tasks/get-tasks')
-      setTasks(taskData.tasks)
+      console.log(taskData)
+      setTasks(taskData.data.tasks)
     }
     getTasks()
   }, [])
