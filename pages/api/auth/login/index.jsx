@@ -26,9 +26,11 @@ const handler = async (req, res) => {
       data: { user, role: user.role },
     })
   } else {
+   
     return res
       .status(405)
-      .json({ status: 'error', message: 'Method not allowed denene' })
+      .json({ status: 'error', message: 'Method not allowed' })
+      
   }
 }
 
