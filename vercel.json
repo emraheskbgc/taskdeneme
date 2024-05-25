@@ -15,13 +15,5 @@
         }
       ]
     }
-  ],
-  "build": {
-    "env": {
-      "DATABASE_URL": "mongodb+srv://batikanemiru:7R6O5cVnpJ0vQIAi@cluster0.vixj8na.mongodb.net/myTaskApp?retryWrites=true&w=majority&appName=Cluster0"
-    },
-    "commands": {
-      "prebuild": "prisma generate"
-    }
-  }
+  ]
 }
