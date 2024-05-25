@@ -28,7 +28,7 @@ const handler = async (req, res) => {
   } else {
     return res
       .status(405)
-      .json({ status: 'error', message: 'Method not allowed' })
+      .json({ status: 'error', message: 'Method not allowed denene' })
   }
 }
 
