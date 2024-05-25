@@ -6,13 +6,12 @@ const handler = async (req, res) => {
     try {
       if (id) {
         const userTasks = await getDataByMany('UserOnTask', {
-          userId: userId,
+          userId: id,
         })
 
         // Extract tasks
         const taskIds = userTasks.map((userTask) => userTask.taskId)
         const tasks = await getDataByMany('Task', { id: { in: taskIds } })
-        console.log(tasks)
 
         return res.status(200).json({ status: 'success', tasks })
       }
@@ -21,3 +20,5 @@ const handler = async (req, res) => {
     }
   }
 }
+
+export default handler

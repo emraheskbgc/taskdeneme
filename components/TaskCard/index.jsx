@@ -2,11 +2,11 @@ import Link from 'next/link'
 import { formatDate } from '../../lib/utils/formatter.js'
 import checkPriority from '../../lib/utils/checkPriority.js'
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, route }) => {
   return (
     <div className="border p-4 flex flex-col gap-3 hover:shadow-md cursor-pointer rounded-md hover:scale-105">
       <div className="flex items-center justify-between">
-        <Link href={`/admindashboard/task/${task.id}`}>
+        <Link href={route}>
           <h2 className="text-xl font-bold hover:text-blue-600">
             {task.title}
           </h2>
