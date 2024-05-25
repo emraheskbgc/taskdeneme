@@ -20,7 +20,6 @@ const handler = async (req, res) => {
 
       // Belirtilen id'ye göre veriyi sil
       const deleteRes = await deleteDataByAny('Task', { id })
-      console.log(deleteRes)
 
       // Hata kontrolü
       if (deleteRes.error) {

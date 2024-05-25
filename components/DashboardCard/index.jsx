@@ -1,7 +1,7 @@
 import Loading from '../loading'
 
-const DashboardCard = ({ title, count }) => {
-  if (count == 0) {
+const DashboardCard = ({ title, count, loading }) => {
+  if (loading) {
     return <Loading />
   }
   return (

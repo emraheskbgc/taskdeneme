@@ -37,11 +37,12 @@ const LoginPage = () => {
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const res = await postAPI('/auth/login', values)
-              if (res.status == 'success') {
+              if (res && res.status == 'success') {
                 const userData = {
                   role: res.data.role,
                   username: res.data.user.username,
                   email: res.data.user.email,
+                  id: res.data.user.id,
                 }
 
                 // Kullanıcı verilerini localStorage'e kaydet

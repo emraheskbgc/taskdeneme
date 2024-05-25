@@ -27,7 +27,7 @@ const AddTaskPage = () => {
     setMinDate(getDateNow())
   }, [])
 
-  if (users.length <= 0) {
+  if (users.length <= 1) {
     return <Loading />
   }
   return (

@@ -8,6 +8,7 @@ const AdminDashboard = () => {
   const [completedTaskCount, setCompletedTaskCount] = useState()
   const [inProgressTaskCount, setInProgressTaskCount] = useState()
   const [allTaskCount, setAllTaskCount] = useState()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchTaskCounts = async () => {
@@ -19,6 +20,7 @@ const AdminDashboard = () => {
           setCompletedTaskCount(completedTaskCount)
           setInProgressTaskCount(inProgressTaskCount)
           setAllTaskCount(allTaskCount)
+          setLoading(false)
         } else {
           // Handle error case
           console.error('Failed to fetch task counts')
@@ -33,9 +35,21 @@ const AdminDashboard = () => {
   }, [])
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      <DashboardCard title={'Total Task'} count={allTaskCount} />
-      <DashboardCard title={'Completed Task'} count={completedTaskCount} />
-      <DashboardCard title={'TASK IN PROGRESS'} count={inProgressTaskCount} />
+      <DashboardCard
+        title={'Total Task'}
+        count={allTaskCount}
+        loading={loading}
+      />
+      <DashboardCard
+        title={'Completed Task'}
+        count={completedTaskCount}
+        loading={loading}
+      />
+      <DashboardCard
+        title={'TASK IN PROGRESS'}
+        count={inProgressTaskCount}
+        loading={loading}
+      />
     </div>
   )
 }
