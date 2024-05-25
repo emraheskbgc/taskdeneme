@@ -26,7 +26,7 @@ const handler = async (req, res) => {
       data: { user, role: user.role },
     })
   } else {
-   
+    console.log("pataladı");
     return res
       .status(405)
       .json({ status: 'error', message: 'Method not allowed' })

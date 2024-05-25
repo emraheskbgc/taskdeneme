@@ -14,7 +14,7 @@ const postAPI = async (
       headers: headers,
       body: JSON.stringify(body),
       cache: 'no-store',
-      mode:"cors"
+      
       // cache önemli! her çalıştığında cache'deki veri yerine -> güncel veriyi almasını sağlar.
       // bu olmaz ise üncel veriyi almayabiliyor dikkat et.
       // Dinamik sayfalarda burası kullanılıyorsa o sayfalara -> export const dynamic = 'force-dynamic' ekle!
