@@ -30,7 +30,7 @@ const RegisterPage = () => {
           onSubmit={async (values, { setSubmitting }) => {
             try {
               const res = await postAPI('/auth/register', values)
-              if (res.status === 'success') {
+              if (res.status == 'success') {
                 setTimeout(() => {
                   router.push('/login')
                 }, 3000)
