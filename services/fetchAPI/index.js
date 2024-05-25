@@ -9,7 +9,7 @@ const postAPI = async (
     if (!process.env.NEXT_PUBLIC_API_URL || !URL) {
       throw new Error('URL bulunamadı! deneme')
     }
-    const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL + URL}`, {
+    const data = await fetch(`//${process.env.NEXT_PUBLIC_API_URL + URL}`, {
       method: method,
       headers: headers,
       body: JSON.stringify(body),
